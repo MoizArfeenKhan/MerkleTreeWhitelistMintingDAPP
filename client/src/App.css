@@ -1,0 +1,73 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Adding styles for the wallet connection elements */
+
+/* Defining some styles for the container */
+.wallet-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+}
+
+/* Defining some styles for the address */
+.wallet-address {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #333333;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* Defining some styles for the button */
+.wallet-button {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #0078d4;
+  border: none;
+  padding: 15px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+/* Changing the button color on hover */
+.wallet-button:hover {
+  background-color: #005a9e;
+}
