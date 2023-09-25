@@ -8,6 +8,7 @@ import { keccak256 } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import Mint from "./Components/mint";
 import Whitelist from "./Account.json";
+import dimension from "./5thdimension.png"
 import "./App.css";
 
 // Main App function
@@ -31,6 +32,7 @@ function App() {
   });
   const [account, setaccount] = useState("none");
   const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
   
   // Contract address
   const contractAddress = "0xEf8a091d6e90e3F2092FF6cb47e8C0d44EB22e3e";
@@ -41,7 +43,7 @@ function App() {
 
       // Checking if window.ethereum is available
       if (window.ethereum) {
-
+        
         // Creating a new provider and signer using ethers.js
         const provider = new BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
@@ -52,6 +54,8 @@ function App() {
         // Getting the account address
         const account = await signer.getAddress();
         setaccount(account);
+
+        setLoading(true);
 
         // Creating a Merkle Tree for the whitelist
         const leafNodes = Whitelist.map((addr) => keccak256(addr));
@@ -94,6 +98,7 @@ function App() {
           totalSupply,
           maxSupply
         });
+        setLoading(false);
       } else {
         // If window.ethereum is not available, show an error message
         setErrorMessage("Please install Metamask wallet");
@@ -107,6 +112,7 @@ function App() {
   return (
     <>
       <div className="wallet-container">
+      <img src={dimension} className="img-fluid" alt=".." width="50%" />
         {errorMessage && <div className="error-message">{errorMessage}</div>}
         <button className="wallet-button" onClick={connectWallet}>
           {account === "none" ? "Connect Wallet" : "Connected"}
@@ -115,6 +121,7 @@ function App() {
         
         {/* Passing state as a prop to the Mint component */}
         <Mint state={state} />
+        {loading && <div>Loading...</div>}
       </div>
     </>
   );

@@ -4,10 +4,9 @@ import "./mint.css";
 
 // Define the Mint function component
 function Mint({ state }) {
-
   // Initialize quantity state variable with 1
   const [quantity, setQuantity] = useState(1);
-  
+
   // Destructure the state object to get necessary variables
   const {
     contract,
@@ -26,10 +25,13 @@ function Mint({ state }) {
   // Define the Mint function
   const Mint = async () => {
     try {
-
       // Check if the user is whitelisted
-      if (checkWL) {
-
+      if (checkWL, 
+        isWLMintActive,
+        totalMintedWL.toString() < 1,
+        whitelistMintedAmount.toString() < 1111,
+        totalSupply.toString() < maxSupply.toString()
+        ) {
         // Define the amount for whitelist mint
         const amount = { value: parseEther("0.005") };
 
@@ -39,9 +41,13 @@ function Mint({ state }) {
         // Wait for the transaction to be mined
         await tx.wait();
         alert("Transaction Completed!");
-      } 
+      }
       // Check if public mint is active
-      else if(isPublicMintActive){
+      else if (isPublicMintActive,
+        totalMintedPublic.toString() < 10,
+        publicMintedAmount.toString() + quantity < 7777,
+        totalSupply.toString() < maxSupply.toString()
+        ) {
         // Define the amount for public mint
         const amount = { value: parseEther((0.01 * quantity).toString()) };
 
@@ -51,11 +57,9 @@ function Mint({ state }) {
         // Wait for the transaction to be mined
         await tx.wait();
         alert("Transaction Completed!");
-      } 
-      else {
+      } else {
         alert("We're Sold Out");
       }
-      
     } catch (error) {
       console.log(error);
       alert("An error occurred while minting: " + error.message);
@@ -64,61 +68,96 @@ function Mint({ state }) {
 
   return (
     <div className="mint-container">
-
       {/* Input field for quantity */}
-          <input
-            type="number"
-            min="1"
-            max={"10" - totalMintedPublic.toString() }
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            disabled={
-              !contract ||
-              !isPublicMintActive ||
-              isWLMintActive ||
-              totalSupply.toString() == maxSupply.toString()
-            }
-          />
+      <div className="quantity-controls">
+        <button
+          className="quantity-button"
+          onClick={() => setQuantity(Math.max(1, quantity - 1))}
+          disabled={
+            !contract ||
+            !isPublicMintActive ||
+            isWLMintActive ||
+            totalSupply.toString() == maxSupply.toString()
+          }
+        >
+          -
+        </button>
+        <input
+          type="number"
+          min="1"
+          max={"10" - totalMintedPublic.toString()}
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          disabled={
+            !contract ||
+            !isPublicMintActive ||
+            isWLMintActive ||
+            totalSupply.toString() == maxSupply.toString()
+          }
+          readOnly
+        />
+
+        <button
+          className="quantity-button"
+          onClick={() =>
+            setQuantity(
+              Math.min("10" - totalMintedPublic.toString(), quantity + 1)
+            )
+          }
+          disabled={
+            !contract ||
+            !isPublicMintActive ||
+            isWLMintActive ||
+            totalSupply.toString() == maxSupply.toString()
+          }
+        >
+          +
+        </button>
+      </div>
 
       {/* Button to trigger minting */}
-          <button
-            className="mint-button"
-            onClick={Mint}
-            disabled={
-              !contract ||
-              (!isPublicMintActive && !isWLMintActive) ||
-              (!checkWL && !isPublicMintActive) ||
-              totalMintedWL.toString() == 1 ||
-              totalMintedPublic.toString() == 10 ||
-              whitelistMintedAmount.toString() == 1111 ||
-              publicMintedAmount.toString() + quantity == 7777 ||
-              totalSupply.toString() == maxSupply.toString()
-            }
-          >
-            Mint
-          </button>
+      <button
+        className="mint-button"
+        onClick={Mint}
+        disabled={
+          !contract ||
+          (!isPublicMintActive && !isWLMintActive) ||
+          (!checkWL && !isPublicMintActive) ||
+          totalMintedWL.toString() == 1 ||
+          totalMintedPublic.toString() == 10 ||
+          whitelistMintedAmount.toString() == 1111 ||
+          publicMintedAmount.toString() + quantity == 7777 ||
+          totalSupply.toString() == maxSupply.toString()
+        }
+      >
+        Mint
+        {contract && (
+          <>
+            {isWLMintActive && " / 0.005 ETH"}
+            {isPublicMintActive && ` / ${quantity * 0.01} ETH`}
+          </>
+        )}
+      </button>
 
       {/* Render input field and button only if contract exists */}
       {contract && (
         <>
-
           {/* Display total supply and max supply */}
-          <p>
+          <p style={{ color: "white" }}>
             {totalSupply.toString()}/{maxSupply.toString()}
           </p>
 
           {/* Display whitelist status */}
           <div className="mint-status">
-            <p>
-              {totalSupply.toString() != maxSupply.toString() && (
-                !checkWL ? "You are not Whitelisted" : "You are Whitelisted"
-              )}
+            <p style={{ color: "white" }}>
+              {totalSupply.toString() != maxSupply.toString() &&
+                (!checkWL ? "You are not Whitelisted" : "You are Whitelisted")}
             </p>
           </div>
 
           {/* Display mint status */}
           <div className="mint-status">
-            <p>
+            <p style={{ color: "white" }}>
               {totalSupply.toString() != maxSupply.toString() && (
                 <>
                   {isPublicMintActive && "Public Mint is Live"}
@@ -130,19 +169,21 @@ function Mint({ state }) {
           </div>
 
           {/* Display max per wallet exceeded message */}
-          {(totalMintedWL.toString() == 1 || totalMintedPublic.toString() == 10) &&
-            <p>Max per wallet Exceeded</p>}
+          {(totalMintedWL.toString() == 1 ||
+            totalMintedPublic.toString() == 10) && (
+            <p style={{ color: "red" }}>Max per wallet Exceeded</p>
+          )}
 
           {/* Display sold out messages */}
-          <p>
-            {whitelistMintedAmount.toString() == 1111 && "Whitelist Supply Sold Out"}
+          <p style={{ color: "red" }}>
+            {whitelistMintedAmount.toString() == 1111 &&
+              "Whitelist Supply Sold Out"}
             {publicMintedAmount.toString() == 7777 && "Public Supply Sold Out"}
             {totalSupply.toString() == maxSupply.toString() && "We're Sold Out"}
           </p>
         </>
       )}
     </div>
-
   );
 }
 

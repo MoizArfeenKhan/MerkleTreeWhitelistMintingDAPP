@@ -1,3 +1,19 @@
+/* Changing the font family */
+* {
+  font-family: 'Your Font', sans-serif;
+}
+
+/* Adding some animation to the button */
+@keyframes button-animation {
+  0% { background-color: #5CE1E6; }
+  50% { background-color: #03989E; }
+  100% { background-color: #5CE1E6; }
+}
+
+.wallet-button {
+  animation: button-animation 2s infinite;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -50,24 +66,27 @@
   font-size: 18px;
   font-weight: bold;
   color: #ffffff;
-  background-color: #333333;
+  background-color: #60939D;
   padding: 10px;
   border-radius: 10px;
 }
 
-/* Defining some styles for the button */
 .wallet-button {
-  font-size: 20px;
-  font-weight: bold;
-  color: #ffffff;
-  background-color: #0078d4;
-  border: none;
-  padding: 15px;
-  border-radius: 15px;
-  cursor: pointer;
+  font-size :20px ;
+  font-weight :bold ;
+  color :#005162 ;
+  background-color :#0078d4 ;
+  border :none ;
+  padding :15px ;
+  border-radius :15px ;
+  cursor :pointer ;
+  
+  /* Add these lines */
+  position:relative ;
+  z-index :1 ; /* This will place the buttons above the background image */
 }
 
 /* Changing the button color on hover */
 .wallet-button:hover {
-  background-color: #005a9e;
+    background-color :#005a9e ;
 }
