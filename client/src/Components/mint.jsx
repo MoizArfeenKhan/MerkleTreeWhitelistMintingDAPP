@@ -3,7 +3,8 @@ import { useState } from "react";
 import "./mint.css";
 
 // Define the Mint function component
-function Mint({ state }) {
+function Mint({ functions, contractInstance }) {
+
   // Initialize quantity state variable with 1
   const [quantity, setQuantity] = useState(1);
 
@@ -18,19 +19,15 @@ function Mint({ state }) {
     totalMintedWL,
     whitelistMintedAmount,
     publicMintedAmount,
-    totalSupply,
-    maxSupply,
-  } = state;
+    totalSupply
+  } = functions;
 
   // Define the Mint function
   const Mint = async () => {
     try {
       // Check if the user is whitelisted
-      if (checkWL, 
-        isWLMintActive,
-        totalMintedWL.toString() < 1,
-        whitelistMintedAmount.toString() < 1111,
-        totalSupply.toString() < maxSupply.toString()
+      if (checkWL &&
+        isWLMintActive
         ) {
         // Define the amount for whitelist mint
         const amount = { value: parseEther("0.005") };
@@ -43,11 +40,7 @@ function Mint({ state }) {
         alert("Transaction Completed!");
       }
       // Check if public mint is active
-      else if (isPublicMintActive,
-        totalMintedPublic.toString() < 10,
-        publicMintedAmount.toString() + quantity < 7777,
-        totalSupply.toString() < maxSupply.toString()
-        ) {
+      else {
         // Define the amount for public mint
         const amount = { value: parseEther((0.01 * quantity).toString()) };
 
@@ -57,8 +50,6 @@ function Mint({ state }) {
         // Wait for the transaction to be mined
         await tx.wait();
         alert("Transaction Completed!");
-      } else {
-        alert("We're Sold Out");
       }
     } catch (error) {
       console.log(error);
@@ -77,7 +68,7 @@ function Mint({ state }) {
             !contract ||
             !isPublicMintActive ||
             isWLMintActive ||
-            totalSupply.toString() == maxSupply.toString()
+            totalSupply.toString() >= 8888
           }
         >
           -
@@ -92,7 +83,7 @@ function Mint({ state }) {
             !contract ||
             !isPublicMintActive ||
             isWLMintActive ||
-            totalSupply.toString() == maxSupply.toString()
+            totalSupply.toString() >= 8888
           }
           readOnly
         />
@@ -108,7 +99,7 @@ function Mint({ state }) {
             !contract ||
             !isPublicMintActive ||
             isWLMintActive ||
-            totalSupply.toString() == maxSupply.toString()
+            totalSupply.toString() >= 8888
           }
         >
           +
@@ -123,11 +114,11 @@ function Mint({ state }) {
           !contract ||
           (!isPublicMintActive && !isWLMintActive) ||
           (!checkWL && !isPublicMintActive) ||
-          totalMintedWL.toString() == 1 ||
-          totalMintedPublic.toString() == 10 ||
-          whitelistMintedAmount.toString() == 1111 ||
-          publicMintedAmount.toString() + quantity == 7777 ||
-          totalSupply.toString() == maxSupply.toString()
+          (totalMintedWL.toString() >= 1 && !isPublicMintActive) ||
+          (totalMintedPublic.toString() >= 10 && !isWLMintActive) ||
+          (whitelistMintedAmount.toString() >= 1111 && isWLMintActive) ||
+          (publicMintedAmount.toString() + quantity >= 7777 && isPublicMintActive) ||
+          totalSupply.toString() >= 8888
         }
       >
         Mint
@@ -144,13 +135,13 @@ function Mint({ state }) {
         <>
           {/* Display total supply and max supply */}
           <p style={{ color: "white" }}>
-            {totalSupply.toString()}/{maxSupply.toString()}
+            {totalSupply.toString()} / 8888
           </p>
 
           {/* Display whitelist status */}
           <div className="mint-status">
             <p style={{ color: "white" }}>
-              {totalSupply.toString() != maxSupply.toString() &&
+              {totalSupply.toString() != 8888 &&
                 (!checkWL ? "You are not Whitelisted" : "You are Whitelisted")}
             </p>
           </div>
@@ -158,7 +149,7 @@ function Mint({ state }) {
           {/* Display mint status */}
           <div className="mint-status">
             <p style={{ color: "white" }}>
-              {totalSupply.toString() != maxSupply.toString() && (
+              {totalSupply.toString() != 8888 && (
                 <>
                   {isPublicMintActive && "Public Mint is Live"}
                   {isWLMintActive && "Whitelist Mint is Live"}
@@ -169,17 +160,22 @@ function Mint({ state }) {
           </div>
 
           {/* Display max per wallet exceeded message */}
-          {(totalMintedWL.toString() == 1 ||
-            totalMintedPublic.toString() == 10) && (
-            <p style={{ color: "red" }}>Max per wallet Exceeded</p>
+          {(isWLMintActive && totalMintedWL.toString() >= 1) && (
+            <p style={{ color: "red" }}>Your Whitelist Mint Limit Exceeded</p>
+          )}
+          {(isPublicMintActive && totalMintedPublic.toString() >= 10) && (
+            <p style={{ color: "red" }}>Your Public Mint Limit Exceeded</p>
+          )}
+          {(!isPublicMintActive && !isWLMintActive && totalMintedWL.toString() >= 1) && (
+            <p style={{ color: "red" }}>You have already minted from this phase</p>
           )}
 
           {/* Display sold out messages */}
           <p style={{ color: "red" }}>
-            {whitelistMintedAmount.toString() == 1111 &&
+            {whitelistMintedAmount.toString() >= 1111 &&
               "Whitelist Supply Sold Out"}
-            {publicMintedAmount.toString() == 7777 && "Public Supply Sold Out"}
-            {totalSupply.toString() == maxSupply.toString() && "We're Sold Out"}
+            {publicMintedAmount.toString() >= 7777 && "Public Supply Sold Out"}
+            {totalSupply.toString() >= 8888 && "We're Sold Out"}
           </p>
         </>
       )}
